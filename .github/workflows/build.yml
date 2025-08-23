@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
       - name: Checkout code
@@ -37,7 +37,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm run build
-          npm run build:win
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            npm run build:win
+          elif [ "${{ matrix.os }}" = "macos-latest" ]; then
+            npm run build:mac
+          else
+            npm run build:linux
+          fi
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -46,7 +52,11 @@ jobs:
           files: |
             release/*.exe
             release/*.msi
-            release/latest.yml
+            release/*.dmg
+            release/*.deb
+            release/*.AppImage
+            release/latest*.yml
+            release/*-mac.zip
           draft: false
           prerelease: false
         env:
