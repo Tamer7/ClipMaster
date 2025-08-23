@@ -71,7 +71,11 @@
         }
       ],
       "icon": "resources/icon.png",
-      "category": "Utility"
+      "category": "Utility",
+      "maintainer": "Your Name <your.email@example.com>",
+      "vendor": "Your Company",
+      "synopsis": "Clipboard History Manager",
+      "description": "A powerful clipboard manager that helps you track and manage your clipboard history"
     },
     "nsis": {
       "oneClick": false,
