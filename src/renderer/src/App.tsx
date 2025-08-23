@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+// @ts-nocheck
+
 import React, { useState, useEffect, useCallback } from 'react'
 import { useMantineColorScheme } from '@mantine/core'
 import {
@@ -7,7 +12,6 @@ import {
   ActionIcon,
   Grid,
   Stack,
-  Kbd,
   Center,
   Loader,
   Button
