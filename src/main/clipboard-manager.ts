@@ -3,8 +3,8 @@ import Store from 'electron-store'
 import { ClipboardItem, ClipboardItemType, AppSettings } from '../shared/types'
 
 export class ClipboardManager {
-  private store: Store
-  private settingsStore: Store
+  private store: Store<{ items: ClipboardItem[] }>
+  private settingsStore: Store<AppSettings>
   private lastClipboardContent: string = ''
   private isMonitoring: boolean = false
   private monitoringInterval: NodeJS.Timeout | null = null
@@ -296,7 +296,7 @@ export class ClipboardManager {
     const maxItems = this.getSettings().maxItems
     const limitedItems = newItems.slice(0, maxItems)
 
-    this.store.set('items', limitedItems)
+    this.store.set('items', limitedItems as ClipboardItem[])
   }
 
   getHistory(): ClipboardItem[] {
@@ -331,7 +331,7 @@ export class ClipboardManager {
   }
 
   getSettings(): AppSettings {
-    return this.settingsStore.store as AppSettings
+    return this.settingsStore.store
   }
 
   updateSettings(settings: Partial<AppSettings>): void {

@@ -3,7 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { ClipboardManager } from './clipboard-manager'
-import { ClipboardItem, SearchFilters, AppSettings } from '../shared/types'
+import { ClipboardItem, AppSettings } from '../shared/types'
 
 let mainWindow: BrowserWindow
 let clipboardManager: ClipboardManager
