@@ -35,15 +35,16 @@ jobs:
       - name: Build and release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
         run: |
           npm run build
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          if ("${{ matrix.os }}" -eq "windows-latest") {
             npm run build:win
-          elif [ "${{ matrix.os }}" = "macos-latest" ]; then
+          } elseif ("${{ matrix.os }}" -eq "macos-latest") {
             npm run build:mac
-          else
+          } else {
             npm run build:linux
-          fi
+          }
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
