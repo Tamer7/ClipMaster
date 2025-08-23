@@ -268,7 +268,7 @@ function App(): React.JSX.Element {
                 c="blue"
                 style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
               >
-                Snippet Finder
+                ClipMaster
               </Text>
               <Group gap="xs" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
                 {selectedItems.length > 1 && (
