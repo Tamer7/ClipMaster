@@ -52,7 +52,8 @@ function createWindow(): void {
 
   // Hide window instead of closing when user clicks X
   mainWindow.on('close', (event) => {
-    if (!(app as any).isQuiting) {
+    // isQuitting is added dynamically to app at runtime
+    if (!(app as unknown as { isQuitting: boolean }).isQuitting) {
       event.preventDefault()
       mainWindow.hide()
     }
@@ -198,9 +199,8 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
 app.on('before-quit', () => {
-  ;(app as any).isQuiting = true
+  ;(app as unknown as { isQuitting: boolean }).isQuitting = true
   clipboardManager?.stopMonitoring()
   globalShortcut.unregisterAll()
 })
