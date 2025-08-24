@@ -60,7 +60,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-build
-          path: dist
+          path: |
+            dist/*.exe
+            dist/*.msi
+            dist/*.dmg
+            dist/*.deb
+            dist/*.AppImage
+            dist/*-mac.zip
           if-no-files-found: error
 
   release:
@@ -97,11 +103,9 @@ jobs:
           tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || env.LATEST_TAG }}
           files: |
             artifacts/**/*.exe
-            artifacts/**/*.msi
             artifacts/**/*.dmg
             artifacts/**/*.deb
             artifacts/**/*.AppImage
-            artifacts/**/latest*.yml
             artifacts/**/*-mac.zip
           draft: false
           prerelease: false

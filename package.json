@@ -89,7 +89,8 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "ClipMaster"
+      "shortcutName": "ClipMaster",
+      "runAfterFinish": true
     }
   },
   "dependencies": {
