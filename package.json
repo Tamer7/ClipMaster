@@ -57,7 +57,7 @@
           ]
         }
       ],
-      "icon": "resources/icon.png",
+      "icon": "build/icon.png",
       "category": "public.app-category.productivity"
     },
     "linux": {
@@ -75,7 +75,7 @@
           ]
         }
       ],
-      "icon": "resources/icon.png",
+      "icon": "build/icon.png",
       "category": "Utility",
       "maintainer": "Your Name <your.email@example.com>",
       "vendor": "Your Company",
@@ -87,9 +87,9 @@
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
       "license": "LICENSE.txt",
-      "installerIcon": "resources/icon.ico",
-      "uninstallerIcon": "resources/icon.ico",
-      "installerHeaderIcon": "resources/icon.ico",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "ClipMaster",
