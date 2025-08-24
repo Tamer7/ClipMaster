@@ -67,10 +67,23 @@ jobs:
             release/*-mac.zip
           if-no-files-found: warn
 
+      - name: Get latest tag
+        id: get_latest_tag
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          git fetch --tags
+          $latestTag = git describe --tags --abbrev=0 2>$null
+          if (-not $latestTag) {
+            $latestTag = "v0.1.0"
+          }
+          echo "LATEST_TAG=$latestTag" >> $env:GITHUB_ENV
+        shell: pwsh
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        if: github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')
         with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || env.LATEST_TAG }}
           files: |
             release/*.exe
             release/*.msi
@@ -80,7 +93,7 @@ jobs:
             release/latest*.yml
             release/*-mac.zip
           draft: false
-          prerelease: false
+          prerelease: ${{ github.ref == 'refs/heads/develop' }}
           generate_release_notes: true
           fail_on_unmatched_files: false
         env:

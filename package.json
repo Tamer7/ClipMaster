@@ -27,7 +27,9 @@
     "publish": {
       "provider": "github",
       "releaseType": "release",
-      "publishAutoUpdate": false
+      "publishAutoUpdate": true,
+      "private": false,
+      "releaseMode": "release"
     },
     "win": {
       "target": "nsis",
