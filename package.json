@@ -30,15 +30,8 @@
       "publishAutoUpdate": false
     },
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "icon": "build/icon.ico"
+      "target": "nsis",
+      "icon": "resources/icon.png"
     },
     "mac": {
       "target": [
@@ -57,7 +50,7 @@
           ]
         }
       ],
-      "icon": "build/icon.png",
+      "icon": "resources/icon.png",
       "category": "public.app-category.productivity"
     },
     "linux": {
@@ -75,7 +68,7 @@
           ]
         }
       ],
-      "icon": "build/icon.png",
+      "icon": "resources/icon.png",
       "category": "Utility",
       "maintainer": "Your Name <your.email@example.com>",
       "vendor": "Your Company",
@@ -86,14 +79,9 @@
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
-      "license": "LICENSE.txt",
-      "installerIcon": "build/icon.ico",
-      "uninstallerIcon": "build/icon.ico",
-      "installerHeaderIcon": "build/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "ClipMaster",
-      "include": "installer.nsh"
+      "shortcutName": "ClipMaster"
     }
   },
   "dependencies": {
