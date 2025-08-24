@@ -24,6 +24,10 @@
     "appId": "com.clipmaster.app",
     "productName": "ClipMaster",
     "copyright": "Copyright © 2025",
+    "directories": {
+      "output": "dist",
+      "buildResources": "resources"
+    },
     "publish": {
       "provider": "github",
       "owner": "Tamer7",

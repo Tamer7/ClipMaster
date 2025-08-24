@@ -12,13 +12,12 @@ on:
     tags:
       - 'v*'
 jobs:
-  release:
+  build:
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,68 +31,80 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build and release
+      - name: Set version
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Set version based on tag or commit
           VERSION: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('0.0.0-dev.{0}', github.sha) }}
         shell: pwsh
         run: |
-          # Update version in package.json
           $package = Get-Content package.json -Raw | ConvertFrom-Json
           $package.version = "$env:VERSION"
           $package | ConvertTo-Json -Depth 100 | Set-Content package.json
-          
-          npm run build
-          if ("${{ matrix.os }}" -eq "windows-latest") {
-            npm run build:win
-          } elseif ("${{ matrix.os }}" -eq "macos-latest") {
-            npm run build:mac
-          } else {
-            npm run build:linux
-          }
 
-      - name: Upload Artifacts
+      - name: Build app
+        run: npm run build
+
+      - name: Build platform packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            npm run build:win
+          elif [ "${{ matrix.os }}" = "macos-latest" ]; then
+            npm run build:mac
+          else
+            npm run build:linux
+          fi
+        shell: bash
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-build
-          path: |
-            release/*.exe
-            release/*.msi
-            release/*.dmg
-            release/*.deb
-            release/*.AppImage
-            release/latest*.yml
-            release/*-mac.zip
-          if-no-files-found: warn
+          path: dist
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Get latest tag
         id: get_latest_tag
         if: github.ref == 'refs/heads/develop'
-        shell: pwsh
+        shell: bash
         run: |
           git fetch --tags --force
-          $latestTag = $(git tag -l 'v*' --sort=-v:refname | Select-Object -First 1)
-          if ([string]::IsNullOrEmpty($latestTag)) {
-            $latestTag = "v0.1.0"
-          }
-          "LATEST_TAG=$latestTag" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          latest_tag=$(git tag -l 'v*' --sort=-v:refname | head -n1)
+          if [ -z "$latest_tag" ]; then
+            latest_tag="v0.1.0"
+          fi
+          echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: "*-build"
+          merge-multiple: true
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
-        if: github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')
         with:
           tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || env.LATEST_TAG }}
           files: |
-            release/*.exe
-            release/*.msi
-            release/*.dmg
-            release/*.deb
-            release/*.AppImage
-            release/latest*.yml
-            release/*-mac.zip
+            artifacts/**/*.exe
+            artifacts/**/*.msi
+            artifacts/**/*.dmg
+            artifacts/**/*.deb
+            artifacts/**/*.AppImage
+            artifacts/**/latest*.yml
+            artifacts/**/*-mac.zip
           draft: false
-          prerelease: ${{ github.ref == 'refs/heads/develop' }}
+          prerelease: false
           generate_release_notes: true
           fail_on_unmatched_files: false
         env:
