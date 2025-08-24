@@ -26,10 +26,12 @@
     "copyright": "Copyright © 2025",
     "publish": {
       "provider": "github",
-      "releaseType": "release",
-      "publishAutoUpdate": true,
+      "owner": "Tamer7",
+      "repo": "ClipMaster",
       "private": false,
-      "releaseMode": "release"
+      "publishAutoUpdate": true,
+      "releaseType": "release",
+      "vPrefixedTagName": true
     },
     "win": {
       "target": "nsis",
