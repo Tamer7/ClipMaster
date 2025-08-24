@@ -24,6 +24,11 @@
     "appId": "com.clipmaster.app",
     "productName": "ClipMaster",
     "copyright": "Copyright © 2025",
+    "publish": {
+      "provider": "github",
+      "releaseType": "release",
+      "publishAutoUpdate": false
+    },
     "win": {
       "target": [
         {
@@ -33,7 +38,7 @@
           ]
         }
       ],
-      "icon": "resources/icon.png"
+      "icon": "build/icon.ico"
     },
     "mac": {
       "target": [

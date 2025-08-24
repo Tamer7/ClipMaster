@@ -35,8 +35,15 @@ jobs:
       - name: Build and release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Set version based on tag or commit
+          VERSION: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('0.0.0-dev.{0}', github.sha) }}
         shell: pwsh
         run: |
+          # Update version in package.json
+          $package = Get-Content package.json -Raw | ConvertFrom-Json
+          $package.version = "$env:VERSION"
+          $package | ConvertTo-Json -Depth 100 | Set-Content package.json
+          
           npm run build
           if ("${{ matrix.os }}" -eq "windows-latest") {
             npm run build:win
@@ -45,6 +52,20 @@ jobs:
           } else {
             npm run build:linux
           }
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.os }}-build
+          path: |
+            release/*.exe
+            release/*.msi
+            release/*.dmg
+            release/*.deb
+            release/*.AppImage
+            release/latest*.yml
+            release/*-mac.zip
+          if-no-files-found: warn
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
