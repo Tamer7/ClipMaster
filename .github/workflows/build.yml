@@ -70,14 +70,18 @@ jobs:
       - name: Get latest tag
         id: get_latest_tag
         if: github.ref == 'refs/heads/develop'
+        shell: pwsh
         run: |
-          git fetch --tags
-          $latestTag = git describe --tags --abbrev=0 2>$null
-          if (-not $latestTag) {
+          git fetch --tags --force
+          try {
+            $latestTag = $(git describe --tags --abbrev=0)
+            if ([string]::IsNullOrEmpty($latestTag)) {
+              $latestTag = "v0.1.0"
+            }
+          } catch {
             $latestTag = "v0.1.0"
           }
-          echo "LATEST_TAG=$latestTag" >> $env:GITHUB_ENV
-        shell: pwsh
+          "LATEST_TAG=$latestTag" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
