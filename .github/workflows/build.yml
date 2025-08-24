@@ -73,12 +73,8 @@ jobs:
         shell: pwsh
         run: |
           git fetch --tags --force
-          try {
-            $latestTag = $(git describe --tags --abbrev=0)
-            if ([string]::IsNullOrEmpty($latestTag)) {
-              $latestTag = "v0.1.0"
-            }
-          } catch {
+          $latestTag = $(git tag -l 'v*' --sort=-v:refname | Select-Object -First 1)
+          if ([string]::IsNullOrEmpty($latestTag)) {
             $latestTag = "v0.1.0"
           }
           "LATEST_TAG=$latestTag" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
